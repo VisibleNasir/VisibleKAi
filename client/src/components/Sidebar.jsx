@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 const navItems = [
     {to: '/ai' , label: 'Dashboard' , Icon:House},
-    {to: '/ai/write-article' , label: 'Write0article' , Icon:SquarePen},
+    {to: '/ai/write-article' , label: 'Write article' , Icon:SquarePen},
     {to: '/ai/blog-titles' , label: 'Blog Titles' , Icon:Hash},
     {to: '/ai/generate-images' , label: 'Generate Images' , Icon:ImageIcon},
     {to: '/ai/remove-background' , label: 'Remove Background' , Icon:Eraser},
