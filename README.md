@@ -1,7 +1,3 @@
-root/
-├── client/ # React frontend
-├── server/ # (if exists) Backend code
-└── README.md
 
 ## 🚀 Getting Started
 
