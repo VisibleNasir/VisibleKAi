@@ -38,13 +38,15 @@ const GenerateImages = () => {
             <label className='relative cursor-pointer'>
               <input type="checkbox"  onChange={(e)=> setPublish(e.target.value)} checked={publish} className='sr-only peer'/>
               <div className='w-9 h-5 bg-slate-300 rounded-full peer-checked:bg-green-500 transition'>
-                <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition peer-checked:translate-x-4'>
-
-                </span>
+                
 
               </div>
+              <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition peer-checked:translate-x-4'>
+                  
+              </span>
 
             </label>
+            <p className='text-sm'>Make this image public</p>
 
           </div>
           <br />
