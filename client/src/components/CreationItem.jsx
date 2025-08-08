@@ -1,40 +1,43 @@
-import React, { useState } from 'react'
-import MarkDown from 'react-markdown'
-const CreationItem = ({item}) => {
-    const [expanded , setExpanded] = useState(false);
+import React, { useState } from "react";
+import MarkDown from "react-markdown";
+import { Button } from "@/components/ui/button";
+
+const CreationItem = ({ item }) => {
+  const [expanded, setExpanded] = useState(false);
+
   return (
-    <div onClick={()=>{
-        setExpanded(!expanded)
-    }} className='p-4 max-w-5xl text-sm bg-white border border-gray-200 rounded cursor-pointer'>
-      <div className='flex justify-between items-center gap-4'>
+    <div
+      onClick={() => setExpanded(!expanded)}
+      className="p-4 max-w-5xl bg-zinc-100 border border-zinc-300 rounded-lg cursor-pointer hover:bg-zinc-200 transition-colors"
+    >
+      <div className="flex justify-between items-center gap-4">
         <div>
-            <h2>{item.prompt}</h2>
-            <p className='text-gray-500'>{item.type} - {new Date(item.created_at).toLocaleDateString()}</p>
+          <h2 className="text-lg font-semibold text-zinc-900">{item.prompt}</h2>
+          <p className="text-sm text-zinc-500">
+            {item.type} - {new Date(item.created_at).toLocaleDateString()}
+          </p>
         </div>
-        <button className='bg-[#EFF6FF] border border-[#BFDBFE] text-[#1E40AF] px-4 py-1 rounded-full'>{item.type}</button>
+        <Button
+          variant="outline"
+          className="bg-zinc-200 border-zinc-300 text-zinc-900 px-4 py-1 text-sm rounded-full hover:bg-zinc-300"
+        >
+          {item.type}
+        </Button>
       </div>
 
-      {
-        expanded && (
-            <div>
-                {item.type == 'image' ?(
-                    <div>
-                        <img src={item.content} alt='image' className='mt-3 w-full max-w-md'/>
-                    </div>
-                ) : (
-                    <div className='mt-3 h-full overflow-y-scroll text-sm text-slate-700'>
-                        <div className='reset-tw'>
-                            <MarkDown>
-                                {item.content}
-                            </MarkDown>
-                        </div>
-                    </div>
-                )}
+      {expanded && (
+        <div className="mt-4">
+          {item.type === "image" ? (
+            <img src={item.content} alt="Generated content" className="mt-3 w-full max-w-md rounded-lg" />
+          ) : (
+            <div className="mt-3 max-h-96 overflow-y-auto text-sm text-zinc-700 prose prose-zinc">
+              <MarkDown>{item.content}</MarkDown>
             </div>
-        )
-      }
+          )}
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default CreationItem
+export default CreationItem;

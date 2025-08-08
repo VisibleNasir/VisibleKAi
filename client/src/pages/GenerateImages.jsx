@@ -1,76 +1,119 @@
-
-
-import {   Image, Sparkles } from 'lucide-react'
-import  { useState } from 'react'
+import { Image, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const GenerateImages = () => {
-  
-    const imageStyle = ['Realistic' , 'Gibli Style' , 'Anime style' , 'Cartoon style', 'Fantasy style' , 'Realistic style' , '3D style' , 'Portrait style']
-  
-      const [selectedStyle ,setSelectedStyle] = useState('Realistic')
-      const onSubmitHandler =async()=>{
-        e.preventDefault();
-      }
-      const [input , setInput] = useState('')
-      const [publish , setPublish] = useState(false);
-  
+  const imageStyle = [
+    "Realistic",
+    "Gibli Style",
+    "Anime style",
+    "Cartoon style",
+    "Fantasy style",
+    "Realistic style",
+    "3D style",
+    "Portrait style",
+  ];
+  const [selectedStyle, setSelectedStyle] = useState("Realistic");
+  const [input, setInput] = useState("");
+  const [publish, setPublish] = useState(false);
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+  };
+
   return (
-    <div className='h-full  w-full overflow-hidden flex-col overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700'>
-      {/* Left col */}
-      <form onSubmit={onSubmitHandler} className=' max-w-lg p-4 bg-white rounded-lg border border-gray-200'>
-          <div className='flex items-center gap-3'>
-            <Sparkles className='w-6 text-[#00AD25]'/>
-            <h1 className='font-bold'>AI Image Generator</h1>
+    <section className="flex flex-col lg:flex-row gap-4 p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">AI Image Generator</CardTitle>
           </div>
-          <p className='mt-6 text-s,m font-medium'>Describe Your Image</p>
-
-          <textarea onChange={(e)=>setInput(e.target.value)} value={input} rows={4} className='w-full p-2 px-3 outline-none text-sm rounded-md border border-gray-300' placeholder='Describe what you want to see in the image...' required />
-
-          <p className='mt-3 text-sm font-medium '>Style</p>
-          <div className='mt-3 flex gap-3 flex-wrap sm:max-w-9/11'>
-            {imageStyle.map((item)=>(
-              <span onClick={()=>{
-                setSelectedStyle(item)
-              }} className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${selectedStyle === item? 'bg-green-50 text-green-700':'text-gray-500 border-gray-300'} `} key={item}>{item}</span>
-            ))}
-          </div>
-          <div className='my-6 flex items-center gap-2'>
-            <label className='relative cursor-pointer'>
-              <input type="checkbox"  onChange={(e)=> setPublish(e.target.value)} checked={publish} className='sr-only peer'/>
-              <div className='w-9 h-5 bg-slate-300 rounded-full peer-checked:bg-green-500 transition'>
-                
-
-              </div>
-              <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition peer-checked:translate-x-4'>
-                  
-              </span>
-
-            </label>
-            <p className='text-sm'>Make this image public</p>
-
-          </div>
-          <br />
-          <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00AD25] to-[#04FF50] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
-            <Image className='w-5'/>
-            Generate Title
-          </button>
-      </form>
-      {/* Right col */}
-      <div className='w-full max-w-lg bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 '>
-            <div className='flex items-center gap-3'>
-              <Image className='w-5 h-5 text-[#00AD25]'/>
-              <h1 className='text-xl font-semibold'>Generated images</h1>
-
+        </CardHeader>
+        <CardContent className="py-2 space-y-4">
+          <form onSubmit={onSubmitHandler} className="space-y-4">
+            <div>
+              <Label htmlFor="image-description" className="text-xs font-medium text-zinc-300">
+                Describe Your Image
+              </Label>
+              <Textarea
+                id="image-description"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                rows={3}
+                placeholder="Describe what you want to see in the image..."
+                className="mt-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:ring-zinc-600 rounded-lg text-sm"
+                required
+              />
             </div>
-            <div className='flex-1 flex justify-center items-center'>
-              <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
-                <Image className='w-9 h-9'/>
-                <p>Enter a topic and click "Generate Image" to get started</p>
-              </div>
+            <div>
+              <Label className="text-xs font-medium text-zinc-300">Style</Label>
+              <RadioGroup
+                value={selectedStyle}
+                onValueChange={setSelectedStyle}
+                className="mt-1 flex flex-wrap gap-2"
+              >
+                {imageStyle.map((item) => (
+                  <div key={item} className="flex items-center space-x-1.5">
+                    <RadioGroupItem
+                      value={item}
+                      id={item}
+                      className="text-zinc-300 border-zinc-600 focus:ring-zinc-500 w-3.5 h-3.5"
+                    />
+                    <Label
+                      htmlFor={item}
+                      className={`text-xs cursor-pointer ${
+                        selectedStyle === item ? "text-zinc-100 font-medium" : "text-zinc-400"
+                      }`}
+                    >
+                      {item}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
             </div>
-      </div>
-    </div>
-  )
-}
+            <div className="flex items-center gap-1.5">
+              <Checkbox
+                id="publish"
+                checked={publish}
+                onCheckedChange={setPublish}
+                className="border-zinc-600 text-zinc-200 w-3.5 h-3.5"
+              />
+              <Label htmlFor="publish" className="text-xs text-zinc-300">
+                Make this image public
+              </Label>
+            </div>
+            <Button
+              type="submit"
+              className="w-full flex items-center gap-1.5 bg-zinc-200 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-300 active:bg-zinc-400 transition-transform transform hover:scale-105 active:scale-95 text-sm"
+            >
+              <Image className="w-4 h-4" />
+              Generate Image
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Image className="w-4 h-4 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">Generated Images</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-2">
+          <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
+            <Image className="w-8 h-8" />
+            <p>Enter a description and click "Generate Image" to get started</p>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+};
 
-export default GenerateImages
+export default GenerateImages;

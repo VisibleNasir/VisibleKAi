@@ -1,61 +1,105 @@
-import {  Edit2, Sparkles } from 'lucide-react'
-import { useState } from 'react'
+import { Edit2, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 const WriteArticle = () => {
   const articleLength = [
-    {length:800 , text: 'Short (500-800 words)'} ,
-    {length:1200 , text: 'Medium (800-1200 words)'} ,
-    {length:1600 , text: 'Long (1200+ words)'} ,
+    { length: 800, text: "Short (500-800 words)" },
+    { length: 1200, text: "Medium (800-1200 words)" },
+    { length: 1600, text: "Long (1200+ words)" },
+  ];
+  const [selectedLength, setSelectedLength] = useState(articleLength[0]);
+  const [input, setInput] = useState("");
 
-  ]
-  const [selectedLength ,setselectedLength] = useState(articleLength[0])
-  const onSubmitHandler =async()=>{
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-  }
-  const [input , setInput] = useState('')
+  };
+
   return (
-    <div className='h-full  w-full overflow-hidden flex-col overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700'>
-      {/* Left col */}
-      <form onSubmit={onSubmitHandler} className=' max-w-lg p-4 bg-white rounded-lg border border-gray-200'>
-          <div className='flex items-center gap-3'>
-            <Sparkles className='w-6 text-[#4A7AFF]'/>
-            <h1 className='font-bold'>Article Configuration</h1>
+    <section className="flex flex-col lg:flex-row gap-4 p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">Article Configuration</CardTitle>
           </div>
-          <p className='mt-6 text-s,m font-medium'>Article Topic</p>
-
-          <input onChange={(e)=>setInput(e.target.value)} value={input} type="text" className='w-full p-2 px-3 outline-none text-sm rounded-md border border-gray-300' placeholder='future of artificial intelligence is...' required />
-
-          <p className='mt-3 text-sm font-medium '>Article Length</p>
-          <div className='mt-3 flex gap-3 flex-wrap sm:max-w-9/11'>
-            {articleLength.map((item, index)=>(
-              <span onClick={()=>{
-                setselectedLength(item)
-              }} className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${selectedLength.text === item.text? 'bg-blue-50 text-blue-700':'text-gray-500 border-gray-300'} `} key={index}>{item.text}</span>
-            ))}
+        </CardHeader>
+        <CardContent className="py-2 space-y-4">
+          <form onSubmit={onSubmitHandler} className="space-y-4">
+            <div>
+              <Label htmlFor="article-topic" className="text-xs font-medium text-zinc-300">
+                Article Topic
+              </Label>
+              <Input
+                id="article-topic"
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="e.g., Future of artificial intelligence is..."
+                className="mt-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:ring-zinc-600 rounded-lg text-sm"
+                required
+              />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-zinc-300">Article Length</Label>
+              <RadioGroup
+                value={selectedLength.text}
+                onValueChange={(value) =>
+                  setSelectedLength(articleLength.find((item) => item.text === value))
+                }
+                className="mt-1 flex flex-wrap gap-2"
+              >
+                {articleLength.map((item) => (
+                  <div key={item.text} className="flex items-center space-x-1.5">
+                    <RadioGroupItem
+                      value={item.text}
+                      id={item.text}
+                      className="text-zinc-300 border-zinc-600 focus:ring-zinc-500 w-3.5 h-3.5"
+                    />
+                    <Label
+                      htmlFor={item.text}
+                      className={`text-xs cursor-pointer ${
+                        selectedLength.text === item.text
+                          ? "text-zinc-100 font-medium"
+                          : "text-zinc-400"
+                      }`}
+                    >
+                      {item.text}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+            <Button
+              type="submit"
+              className="w-full flex items-center gap-1.5 bg-zinc-200 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-300 active:bg-zinc-400 transition-transform transform hover:scale-105 active:scale-95 text-sm"
+            >
+              <Edit2 className="w-4 h-4" />
+              Generate Article
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Edit2 className="w-4 h-4 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">Generated Article</CardTitle>
           </div>
-          <br />
-          <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#226BFF] to-[#65ADFF] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
-            <Edit2 className='w-5'/>
-            Generate article
-          </button>
-      </form>
-      {/* Right col */}
-      <div className='w-full max-w-lg bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 max-h-[600px]'>
-            <div className='flex items-center gap-3'>
-              <Edit2 className='w-5 h-5 text-[#4A7AFF]'/>
-              <h1 className='text-xl font-semibold'>Generated article</h1>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-2">
+          <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
+            <Edit2 className="w-8 h-8" />
+            <p>Enter a topic and click "Generate Article" to get started</p>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+};
 
-            </div>
-            <div className='flex-1 flex justify-center items-center'>
-              <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
-                <Edit2 className='w-9 h-9 '/>
-                <p>Enter a topic and click "Generate Article" to get started</p>
-
-              </div>
-            </div>
-      </div>
-    </div>
-  )
-}
-
-export default WriteArticle
+export default WriteArticle;

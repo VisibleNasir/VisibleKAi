@@ -1,11 +1,68 @@
-
+import { FileText, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@radix-ui/react-label";
 
 const ReviewResume = () => {
-  return (
-    <div>
-      ReviewResume
-    </div>
-  )
-}
+  const [input, setInput] = useState("");
 
-export default ReviewResume
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+  };
+
+  return (
+    <section className="flex flex-col lg:flex-row gap-4 p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">Resume Review</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="py-2 space-y-4">
+          <form onSubmit={onSubmitHandler} className="space-y-4">
+            <div>
+              <Label htmlFor="resume-upload" className="text-xs font-medium text-zinc-300">
+                Upload Resume
+              </Label>
+              <Input
+                id="resume-upload"
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setInput(e.target.files[0])}
+                className="mt-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:ring-zinc-600 rounded-lg file:text-zinc-400 text-sm"
+                required
+              />
+              <p className="text-xs text-zinc-500 mt-0.5">Supports PDF resume only.</p>
+            </div>
+            <Button
+              type="submit"
+              className="w-full flex items-center gap-1.5 bg-zinc-200 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-300 active:bg-zinc-400 transition-transform transform hover:scale-105 active:scale-95 text-sm"
+            >
+              <FileText className="w-4 h-4" />
+              Review Resume
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">Analysis Results</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-2">
+          <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
+            <FileText className="w-8 h-8" />
+            <p>Upload a resume and click "Review Resume" to get started</p>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+};
+
+export default ReviewResume;
