@@ -1,50 +1,68 @@
-
 import { Eraser, Sparkles } from "lucide-react";
-import React, { useState } from "react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 const RemoveBackground = () => {
+  const [input, setInput] = useState("");
 
-   const onSubmitHandler =async()=>{
-        e.preventDefault();
-      }
-      const [input , setInput] = useState('')
-
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+  };
 
   return (
-    <div className='h-full  w-full  flex-col  p-6 flex items-start flex-wrap gap-4 text-slate-700'>
-      {/* Left col */}
-      <form onSubmit={onSubmitHandler} className=' max-w-lg p-4 bg-white rounded-lg border border-gray-200'>
-          <div className='flex items-center gap-3'>
-            <Sparkles className='w-6 text-[#FF4938]'/>
-            <h1 className='font-bold'>Background Removal</h1>
+    <section className="flex flex-col lg:flex-row gap-4 p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">Background Removal</CardTitle>
           </div>
-          <p className='mt-6 text-s,m font-medium'>Upload image</p>
-
-          <input onChange={(e)=>setInput(e.target.files[0])} type="file" accept='image/*' className='w-full p-2 px-3 outline-none text-sm rounded-md border border-gray-300 text-gray-600'  required />
-         
-          <p className='text-xs text-gray-500 font-light mt-1'>Supports JPG, PNG, and other image format</p>
-
-          <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#F6AB41] to-[#FF4938] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
-            <Eraser className='w-5'/>
-            Remove Background
-          </button>
-      </form>
-      {/* Right col */}
-      <div className='w-full max-w-lg bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 '>
-            <div className='flex items-center gap-3'>
-              <Eraser className='w-5 h-5 text-[#FF4938]'/>
-              <h1 className='text-xl font-semibold'>Processed Image</h1>
-
+        </CardHeader>
+        <CardContent className="py-2 space-y-4">
+          <form onSubmit={onSubmitHandler} className="space-y-4">
+            <div>
+              <Label htmlFor="image-upload" className="text-xs font-medium text-zinc-300">
+                Upload Image
+              </Label>
+              <Input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setInput(e.target.files[0])}
+                className="mt-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:ring-zinc-600 rounded-lg file:text-zinc-400 text-sm"
+                required
+              />
+              <p className="text-xs text-zinc-500 mt-0.5">Supports JPG, PNG, and other image formats.</p>
             </div>
-            <div className='flex-1 flex justify-center items-center'>
-              <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
-                <Eraser className='w-9 h-9'/>
-                <p>Upload an image and click "Remove Background" to get started</p>
+            <Button
+              type="submit"
+              className="w-full flex items-center gap-1.5 bg-zinc-200 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-300 active:bg-zinc-400 transition-transform transform hover:scale-105 active:scale-95 text-sm"
+            >
+              <Eraser className="w-4 h-4" />
+              Remove Background
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Eraser className="w-4 h-4 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">Processed Image</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-2">
+          <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
+            <Eraser className="w-8 h-8" />
+            <p>Upload an image and click "Remove Background" to get started</p>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+};
 
-              </div>
-            </div>
-      </div>
-    </div>
-  )
-}
-
-export default RemoveBackground
+export default RemoveBackground;

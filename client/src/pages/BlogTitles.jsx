@@ -1,59 +1,106 @@
+import { Hash, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
-import {  Hash, Sparkles } from 'lucide-react'
-import  { useState } from 'react'
 const BlogTitles = () => {
+  const blogCategories = [
+    "General",
+    "Technology",
+    "Business",
+    "Health",
+    "Lifestyle",
+    "Education",
+    "Travel",
+    "Food",
+  ];
+  const [selectedCategory, setSelectedCategory] = useState("General");
+  const [input, setInput] = useState("");
 
-  const blodCategories = ['General' , 'Technology' ,'Business' , 'Health' ,'Lifestyle' , 'Education' ,'Travel' ,'Food']
-
-    const [selectedCategory ,setSelectedCategory] = useState('General')
-    const onSubmitHandler =async()=>{
-      e.preventDefault();
-    }
-    const [input , setInput] = useState('')
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+  };
 
   return (
-    <div className='h-full  w-full overflow-hidden flex-col overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700'>
-      {/* Left col */}
-      <form onSubmit={onSubmitHandler} className=' max-w-lg p-4 bg-white rounded-lg border border-gray-200'>
-          <div className='flex items-center gap-3'>
-            <Sparkles className='w-6 text-[#8E37EB]'/>
-            <h1 className='font-bold'>AI Title Generation</h1>
+    <section className="flex flex-col lg:flex-row gap-4 p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">AI Title Generation</CardTitle>
           </div>
-          <p className='mt-6 text-s,m font-medium'>Keyword</p>
-
-          <input onChange={(e)=>setInput(e.target.value)} value={input} type="text" className='w-full p-2 px-3 outline-none text-sm rounded-md border border-gray-300' placeholder='Describe your blog title here...' required />
-
-          <p className='mt-3 text-sm font-medium '>Category</p>
-          <div className='mt-3 flex gap-3 flex-wrap sm:max-w-9/11'>
-            {blodCategories.map((item)=>(
-              <span onClick={()=>{
-                setSelectedCategory(item)
-              }} className={`text-xs px-4 py-1 border rounded-full cursor-pointer ${selectedCategory === item? 'bg-purple-50 text-purple-700':'text-gray-500 border-gray-300'} `} key={item}>{item}</span>
-            ))}
+        </CardHeader>
+        <CardContent className="py-2 space-y-4">
+          <form onSubmit={onSubmitHandler} className="space-y-4">
+            <div>
+              <Label htmlFor="keyword" className="text-xs font-medium text-zinc-300">
+                Keyword
+              </Label>
+              <Input
+                id="keyword"
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Describe your blog title here..."
+                className="mt-1 bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500 focus:ring-zinc-600 rounded-lg text-sm"
+                required
+              />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-zinc-300">Category</Label>
+              <RadioGroup
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+                className="mt-1 flex flex-wrap gap-2"
+              >
+                {blogCategories.map((item) => (
+                  <div key={item} className="flex items-center space-x-1.5">
+                    <RadioGroupItem
+                      value={item}
+                      id={item}
+                      className="text-zinc-300 border-zinc-600 focus:ring-zinc-500 w-3.5 h-3.5"
+                    />
+                    <Label
+                      htmlFor={item}
+                      className={`text-xs cursor-pointer ${
+                        selectedCategory === item ? "text-zinc-100 font-medium" : "text-zinc-400"
+                      }`}
+                    >
+                      {item}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+            <Button
+              type="submit"
+              className="w-full flex items-center gap-1.5 bg-zinc-200 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-300 active:bg-zinc-400 transition-transform transform hover:scale-105 active:scale-95 text-sm"
+            >
+              <Hash className="w-4 h-4" />
+              Generate Title
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+        <CardHeader className="py-2">
+          <div className="flex items-center gap-2">
+            <Hash className="w-4 h-4 text-zinc-400" />
+            <CardTitle className="text-base font-semibold text-zinc-100">Generated Titles</CardTitle>
           </div>
-          <br />
-          <button className='w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#C341F6] to-[#8E37EB] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer'>
-            <Hash className='w-5'/>
-            Generate Title
-          </button>
-      </form>
-      {/* Right col */}
-      <div className='w-full max-w-lg bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 '>
-            <div className='flex items-center gap-3'>
-              <Hash className='w-5 h-5 text-[#8E37EB]'/>
-              <h1 className='text-xl font-semibold'>Generated titles</h1>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center py-2">
+          <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
+            <Hash className="w-8 h-8" />
+            <p>Enter a keyword and click "Generate Title" to get started</p>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+};
 
-            </div>
-            <div className='flex-1 flex justify-center items-center'>
-              <div className='text-sm flex flex-col items-center gap-5 text-gray-400'>
-                <Hash className='w-9 h-9'/>
-                <p>Enter a topic and click "Generate Title" to get started</p>
-
-              </div>
-            </div>
-      </div>
-    </div>
-  )
-}
-
-export default BlogTitles
+export default BlogTitles;
