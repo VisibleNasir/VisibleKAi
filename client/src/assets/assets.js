@@ -3,12 +3,15 @@ import gradientBackground from "./gradientBackground.png";
 import user_group from "./user_group.png";
 import star_icon from "./star_icon.svg";
 import star_dull_icon from "./star_dull_icon.svg";
-import profile_img_1 from "./profile_img_1.png";
 import arrow_icon from "./arrow_icon.svg";
 import { SquarePen, Hash, Image, Eraser, Scissors, FileText } from 'lucide-react'
 import ai_gen_img_1 from "./ai_gen_img_1.png";
 import ai_gen_img_2 from "./ai_gen_img_2.png";
 import ai_gen_img_3 from "./ai_gen_img_3.png";
+import shifa from "./shifa.jpeg";
+import mrudula from "./mrudula.jpeg";
+import suhas from "./suhas.jpeg";
+
 
 export const assets = {
     logo,
@@ -16,7 +19,9 @@ export const assets = {
     user_group,
     star_icon,
     star_dull_icon,
-    profile_img_1,
+    shifa,
+    mrudula,
+    suhas,
     arrow_icon,
 };
 
@@ -67,26 +72,27 @@ export const AiToolsData = [
 
 export const dummyTestimonialData = [
     {
-        image: assets.profile_img_1,
-        name: 'John Doe',
-        title: 'Marketing Director, TechCorp',
-        content: 'ContentAI has revolutionized our content workflow. The quality of the articles is outstanding, and it saves us hours of work every week.',
-        rating: 4,
+    image: assets.shifa,
+    name: 'Shifa Koti',
+    title: 'Frontend Developer, InnovateSoft',
+    content: 'This platform has completely streamlined my workflow. From generating content to designing visuals, everything feels fast, intuitive, and professional.',
+    rating: 4,
     },
     {
-        image: assets.profile_img_1,
-        name: 'Jane Smith',
-        title: 'Content Creator, TechCorp',
-        content: 'ContentAI has made our content creation process effortless. The AI tools have helped us produce high-quality content faster than ever before.',
+        image: assets.suhas,
+        name: 'Suhas Alagi',
+        title: 'Full Stack Engineer, CodeWave Solutions',
+        content: 'The AI tools here save me hours of repetitive work. I can focus more on building products while the platform handles the creative heavy lifting.',
         rating: 5,
     },
     {
-        image: assets.profile_img_1,
-        name: 'David Lee',
-        title: 'Content Writer, TechCorp',
-        content: 'ContentAI has transformed our content creation process. The AI tools have helped us produce high-quality content faster than ever before.',
+        image: assets.mrudula,
+        name: 'Mrudula Sadafule',
+        title: 'UI/UX Designer, PixelCraft Studios',
+        content: 'I love how effortlessly I can create stunning visuals and clean content. The smooth interface and AI-powered tools make it a must-have in my workflow.',
         rating: 4,
-    },
+    }
+
 ]
 
 
