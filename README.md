@@ -1,4 +1,6 @@
-### A modern SaaS platform designed to help users create, edit, and enhance content effortlessly using AI-powered tools. Whether you're a writer, designer, or job seeker, our platform provides an all-in-one dashboard for productivity and creativity.
+#### VisibleKAi
+
+A modern SaaS platform designed to help users create, edit, and enhance content effortlessly using AI-powered tools. Whether you're a writer, designer, or job seeker, our platform provides an all-in-one dashboard for productivity and creativity.
 
 #### Features
 📊 Dashboard
