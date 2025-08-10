@@ -9,25 +9,35 @@ import RemoveBackground from "./pages/RemoveBackground"
 import ReviewResume from "./pages/ReviewResume"
 import Community from "./pages/Community"
 import REmoveObject from "./pages/RemoveObject"
+import { useEffect } from "react"
+import { useAuth } from "@clerk/clerk-react"
+
 
 const App = () => {
+
+  const {getToken} = useAuth()
+  useEffect(() => {
+    getToken().then((token) => console.log(token));
+
+  },[])
+
+
+  
   return (
     <div>
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path='ai' element={<Layout/>}>
-          <Route index element={<Dashboard/>} />
-          <Route index path='write-article' element={<WriteArticle/>} />
-          <Route index path='blog-titles' element={<BlogTitles/>} />
-          <Route index path='generate-images' element={<GenerateImages/>} />
-          <Route index path='remove-background' element={<RemoveBackground/>} />
-          <Route index path='remove-object' element={<REmoveObject/>} />
-          <Route index path='review-resume' element={<ReviewResume/>} />
-          <Route index path='community' element={<Community/>} />
+          <Route element={<Dashboard/>} />
+          <Route path='write-article' element={<WriteArticle/>} />
+          <Route path='blog-titles' element={<BlogTitles/>} />
+          <Route path='generate-images' element={<GenerateImages/>} />
+          <Route path='remove-background' element={<RemoveBackground/>} />
+          <Route path='remove-object' element={<REmoveObject/>} />
+          <Route path='review-resume' element={<ReviewResume/>} />
+          <Route path='community' element={<Community/>} />
         </Route>
-        <Route path="/" element={<Home/>} />
-        <Route path="/" element={<Home/>} />
-        <Route path="/" element={<Home/>} />
+       
       </Routes>
     </div>
   )
