@@ -47,6 +47,16 @@ npm install
 
 # Start development server
 npm run dev
+
+# Go to the client directory
+cd server
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run server
+
 ```
 🤝 Contributing
 Contributions, issues, and feature requests are welcome!
