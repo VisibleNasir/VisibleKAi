@@ -25,8 +25,7 @@ export const generateArticle = async (req, res) => {
             messages: [{
                 role: "user",
                 content: prompt,
-            },
-
+                },
             ],
             temperature: 0.7,
             max_tokens: length,
@@ -105,20 +104,24 @@ export const generateImage = async (req, res) => {
 
         const formData = new FormData()
         formData.append('prompt', prompt)
+        console.log("ClipDrop API Key:", process.env.CLIPDROP_API_KEY)
         const {data} = await axios.post("https://clipdrop-api.co/text-to-image/v1", formData, {
-            headers: {'x-api-key': process.env.CLIPDROP_API_KEY,},
+            headers: {
+                'x-api-key': process.env.CLIPDROP_API_KEY,
+            },
+
             responseType: 'arraybuffer',
         })
 
         const base64Image = `data:image/png;base64,${Buffer.from(data, 'binary').toString('base64')}`;
 
+
+
         const {secure_url} = await cloudinary.uploader.upload(base64Image)
 
         await sql`INSERT INTO CREATIONS (user_id, prompt, content, type, publish) VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${publish ?? false})`;
 
-       
-
-        res.json({ success: true, content: secure_url })
+        res.json({ success: true, content: secure_url })    
 
     } catch (error) {
         console.error(error.message);
