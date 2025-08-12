@@ -5,8 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { useAuth } from "@clerk/clerk-react";
+import toast from "react-hot-toast";
+import Markdown from "react-markdown";
 
-const WriteArticle = () => {
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+
+const WriteArticle =  () => {
   const articleLength = [
     { length: 800, text: "Short (500-800 words)" },
     { length: 1200, text: "Medium (800-1200 words)" },
@@ -14,9 +20,46 @@ const WriteArticle = () => {
   ];
   const [selectedLength, setSelectedLength] = useState(articleLength[0]);
   const [input, setInput] = useState("");
+  const [loading , setLoading] = useState(false);
+  const [content , setContent] = useState("");
+  
+  const {getToken} = useAuth();
+
+  
 
   const onSubmitHandler = async (e) => {
+
     e.preventDefault();
+    try {
+      setLoading(true);
+
+      const token = await getToken(); // ✅ Correct way
+      if (!token) {
+        toast.error("Authentication failed. Please log in.");
+        return;
+      }
+      const prompt = `Write an article about ${input} in ${selectedLength.text}`
+
+      const {data} = await axios.post('api/ai/generate-article', {prompt, length:selectedLength.length},{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      if(data.success){
+        setContent(data.content);
+
+      }else{
+        toast.error(data.message);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("Something went wrong");
+      } 
+    }
+    setLoading(false)
   };
 
   return (
@@ -74,29 +117,41 @@ const WriteArticle = () => {
                 ))}
               </RadioGroup>
             </div>
-            <Button
+            <Button disabled={loading}
               type="submit"
               className="w-full flex items-center gap-1.5 bg-zinc-200 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-300 active:bg-zinc-400 transition-transform transform hover:scale-105 active:scale-95 text-sm"
             >
-              <Edit2 className="w-4 h-4" />
+              {
+                loading ? <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span> 
+                : <Edit2 className="w-4 h-4" />
+              }
               Generate Article
             </Button>
           </form>
         </CardContent>
       </Card>
-      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg max-h-[600px] p-2 ">
         <CardHeader className="py-2">
           <div className="flex items-center gap-2">
             <Edit2 className="w-4 h-4 text-zinc-400" />
             <CardTitle className="text-base font-semibold text-zinc-100">Generated Article</CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="flex items-center justify-center py-2">
-          <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
+
+        {!content ? (<CardContent className="flex items-center justify-center py-2">
+          <div className="text-center text-xs text-zinc-100 flex flex-col items-center gap-3">
             <Edit2 className="w-8 h-8" />
             <p>Enter a topic and click "Generate Article" to get started</p>
           </div>
-        </CardContent>
+        </CardContent>) : (
+          <div className="mt-1  h-full overflow-y-scroll text-zinc-100">
+            
+            <div className=".reset-tw">
+              <Markdown>{content}</Markdown>
+            </div>
+          </div>
+        )}
+        
       </Card>
     </section>
   );

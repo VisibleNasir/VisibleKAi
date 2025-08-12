@@ -5,6 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import toast from "react-hot-toast";
+import Markdown from "react-markdown";
+import { useAuth } from "@clerk/clerk-react";
+import axios from "axios";
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const BlogTitles = () => {
   const blogCategories = [
@@ -19,24 +24,59 @@ const BlogTitles = () => {
   ];
   const [selectedCategory, setSelectedCategory] = useState("General");
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState("");
+  const { getToken } = useAuth();
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    try {
+      setLoading(true);
+      const token = await getToken();
+      const prompt = `Generate a blog title for the keyword ${input} in the category ${selectedCategory}`;
+
+      const { data } = await axios.post(
+        "api/ai/generate-blog-title",
+        { prompt },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (data.success) {
+        setContent(data.content);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message || error.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+    setLoading(false);
   };
 
   return (
-    <section className="flex flex-col lg:flex-row gap-4 p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100">
-      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+    <section className="flex flex-col lg:flex-row gap-4 p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100 ">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg ">
         <CardHeader className="py-2">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-zinc-400" />
-            <CardTitle className="text-base font-semibold text-zinc-100">AI Title Generation</CardTitle>
+            <CardTitle className="text-base font-semibold text-zinc-100">
+              AI Title Generation
+            </CardTitle>
           </div>
         </CardHeader>
         <CardContent className="py-2 space-y-4">
           <form onSubmit={onSubmitHandler} className="space-y-4">
             <div>
-              <Label htmlFor="keyword" className="text-xs font-medium text-zinc-300">
+              <Label
+                htmlFor="keyword"
+                className="text-xs font-medium text-zinc-300"
+              >
                 Keyword
               </Label>
               <Input
@@ -50,7 +90,9 @@ const BlogTitles = () => {
               />
             </div>
             <div>
-              <Label className="text-xs font-medium text-zinc-300">Category</Label>
+              <Label className="text-xs font-medium text-zinc-300">
+                Category
+              </Label>
               <RadioGroup
                 value={selectedCategory}
                 onValueChange={setSelectedCategory}
@@ -66,7 +108,9 @@ const BlogTitles = () => {
                     <Label
                       htmlFor={item}
                       className={`text-xs cursor-pointer ${
-                        selectedCategory === item ? "text-zinc-100 font-medium" : "text-zinc-400"
+                        selectedCategory === item
+                          ? "text-zinc-100 font-medium"
+                          : "text-zinc-400"
                       }`}
                     >
                       {item}
@@ -76,28 +120,43 @@ const BlogTitles = () => {
               </RadioGroup>
             </div>
             <Button
+              disabled={loading}
               type="submit"
               className="w-full flex items-center gap-1.5 bg-zinc-200 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-300 active:bg-zinc-400 transition-transform transform hover:scale-105 active:scale-95 text-sm"
             >
-              <Hash className="w-4 h-4" />
+              {loading ? (
+                <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>
+              ) : (
+                <Hash className="w-4 h-4" />
+              )}
               Generate Title
             </Button>
           </form>
         </CardContent>
       </Card>
-      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800  shadow-lg  p-2">
         <CardHeader className="py-2">
           <div className="flex items-center gap-2">
             <Hash className="w-4 h-4 text-zinc-400" />
-            <CardTitle className="text-base font-semibold text-zinc-100">Generated Titles</CardTitle>
+            <CardTitle className="text-base font-semibold text-zinc-100">
+              Generated Titles
+            </CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="flex items-center justify-center py-2">
-          <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
-            <Hash className="w-8 h-8" />
-            <p>Enter a keyword and click "Generate Title" to get started</p>
+        {!content ? (
+          <CardContent className="flex items-center justify-center py-2">
+            <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
+              <Hash className="w-8 h-8" />
+              <p>Enter a keyword and click "Generate Title" to get started</p>
+            </div>
+          </CardContent>
+        ) : (
+          <div className="mt-1  h-full overflow-y-scroll text-zinc-100">
+            <div className=".reset-tw">
+              <Markdown>{content}</Markdown>
+            </div>
           </div>
-        </CardContent>
+        )}
       </Card>
     </section>
   );
