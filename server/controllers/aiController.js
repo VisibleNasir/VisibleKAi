@@ -128,3 +128,22 @@ export const generateImage = async (req, res) => {
         res.json({ success: false, message: error.message });
     }
 }
+
+export const getCreations = async (req, res) => {
+    try {
+        const { userId } = req.auth();
+
+        // Fetch the latest creations for this user
+        const creations = await sql`
+            SELECT id, prompt, content, type, created_at
+            FROM CREATIONS
+            WHERE user_id = ${userId}
+            ORDER BY created_at DESC
+        `;
+
+        res.json({ success: true, creations });
+    } catch (error) {
+        console.error(error.message);
+        res.json({ success: false, message: error.message });
+    }
+};

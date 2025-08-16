@@ -11,6 +11,8 @@ import ai_gen_img_3 from "./ai_gen_img_3.png";
 import shifa from "./shifa.jpeg";
 import mrudula from "./mrudula.jpeg";
 import suhas from "./suhas.jpeg";
+import nasir from "./nasir.jpg";
+
 
 
 export const assets = {
@@ -22,6 +24,7 @@ export const assets = {
     shifa,
     mrudula,
     suhas,
+    nasir,
     arrow_icon,
 };
 
@@ -30,14 +33,12 @@ export const AiToolsData = [
         title: 'AI Article Writer',
         description: 'Generate high-quality, engaging articles on any topic with our AI writing technology.',
         Icon: SquarePen,
-        bg: { from: '#3588F2', to: '#0BB0D7' },
         path: '/ai/write-article'
     },
     {
         title: 'Blog Title Generator',
         description: 'Find the perfect, catchy title for your blog posts with our AI-powered generator.',
         Icon: Hash,
-        bg: { from: '#B153EA', to: '#E549A3' },
         path: '/ai/blog-titles'
     },
     {
@@ -91,6 +92,13 @@ export const dummyTestimonialData = [
         title: 'UI/UX Designer, PixelCraft Studios',
         content: 'I love how effortlessly I can create stunning visuals and clean content. The smooth interface and AI-powered tools make it a must-have in my workflow.',
         rating: 4,
+    },
+    {
+    image: assets.nasir,
+    name: 'Nasir Nadaf',
+    title: 'Content Creator & Software Developer',
+    content: 'I have been creating videos for over 2 years and now have 1.1K subscribers on YouTube. The AI-powered tools here help me craft stunning visuals, clean content, and make my workflow smoother than ever.',
+    rating: 4,
     }
 
 ]

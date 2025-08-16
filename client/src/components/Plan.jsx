@@ -13,14 +13,7 @@ const Plan = () => {
   };
 
   return (
-    <section className="relative py-24 bg-zinc-950 text-zinc-100 px-4 sm:px-6 lg:px-8">
-      <motion.div
-        className="absolute inset-0"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.7 }}
-        variants={bgVariants}
-      />
+    <section className="relative py-24  text-zinc-100 px-4 sm:px-6 lg:px-8">
       <div className="relative z-10 text-center max-w-3xl mx-auto">
         <h2 className="text-4xl sm:text-5xl font-bold tracking-tight text-zinc-100">Choose Your Plan</h2>
         <p className="text-zinc-400 text-lg mt-4 max-w-lg mx-auto">
@@ -28,7 +21,7 @@ const Plan = () => {
         </p>
       </div>
       <div className="mt-12 max-w-4xl mx-auto">
-        <PricingTable />
+        <PricingTable  />
       </div>
     </section>
   );
