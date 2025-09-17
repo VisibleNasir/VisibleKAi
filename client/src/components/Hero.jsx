@@ -1,5 +1,5 @@
 
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -40,7 +40,7 @@ const Hero = () => {
           </Button>
           <Button
             variant="outline"
-            onClick={() => {}}
+            onClick={() => window.open("https://www.youtube.com/@VisibleNasir", "_blank")}
             className="border-zinc-700 bg-zinc-800 text-zinc-100 px-8 py-6 text-base font-semibold rounded-lg hover:bg-zinc-700 hover:text-zinc-50 active:bg-zinc-600 transition-transform transform hover:scale-101 active:scale-95"
           >
             Watch Demo
