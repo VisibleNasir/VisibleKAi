@@ -4,16 +4,54 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { useAuth } from "@clerk/clerk-react";
+import toast from "react-hot-toast";
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const RemoveBackground = () => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [content, setContent] = useState('');
+
+  const { getToken } = useAuth();
+
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    try {
+      setLoading(true);
+
+
+      const formData = new FormData();
+      formData.append('image', input);
+
+      const { data } = await axios.post(
+        "/api/ai/remove-image-background",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`
+          }
+        });
+
+      if (data.success) {
+        setContent(data.content)
+      } else {
+        toast.error(data.message);
+      }
+
+    } catch (error) {
+
+      toast.error(error.message);
+
+    }
+    setLoading(false);
   };
 
   return (
-    <section className="flex flex-col lg:flex-row gap-4 p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100">
+    <section className="sm:p-6 md:p-8 lg:p-10 bg-zinc-950 flex justify-evenly w-screen h-screen text-zinc-100">
       <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg">
         <CardHeader className="py-2">
           <div className="flex items-center gap-2">
@@ -24,7 +62,7 @@ const RemoveBackground = () => {
         <CardContent className="py-2 space-y-4">
           <form onSubmit={onSubmitHandler} className="space-y-4">
             <div>
-              <Label htmlFor="image-upload" className="text-xs font-medium text-zinc-300">
+              <Label htmlFor="image-upload" className="text-xl font-medium text-zinc-300">
                 Upload Image
               </Label>
               <Input
@@ -39,9 +77,14 @@ const RemoveBackground = () => {
             </div>
             <Button
               type="submit"
-              className="w-full flex items-center gap-1.5 bg-zinc-200 text-zinc-950 font-semibold rounded-lg hover:bg-zinc-300 active:bg-zinc-400 transition-transform transform hover:scale-105 active:scale-95 text-sm"
+              disabled={loading}
+              className="w-full flex items-center gap-1.5 bg-zinc-700 text-zinc-100 font-semibold rounded-lg hover:bg-zinc-600 active:bg-zinc-700 transition-transform transform cursor-pointer text-sm"
             >
-              <Eraser className="w-4 h-4" />
+              {
+                loading ? <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>
+                  : <Eraser className="w-5" />
+              }
+
               Remove Background
             </Button>
           </form>
@@ -54,12 +97,23 @@ const RemoveBackground = () => {
             <CardTitle className="text-base font-semibold text-zinc-100">Processed Image</CardTitle>
           </div>
         </CardHeader>
-        <CardContent className="flex items-center justify-center py-2">
-          <div className="text-center text-xs text-zinc-400 flex flex-col items-center gap-3">
-            <Eraser className="w-8 h-8" />
-            <p>Upload an image and click "Remove Background" to get started</p>
-          </div>
-        </CardContent>
+        {
+          !content ?
+            (
+              <CardContent className="flex items-center justify-center py-2">
+                <div className="text-center text-xs text-zinc-100 flex flex-col items-center gap-3">
+                  <Eraser className="w-8 h-8" />
+                  <p>Upload an image and click "Remove Background" to get started</p>
+                </div>
+              </CardContent>
+            ) :
+            (
+              <img src={content} alt="image" className="mt-3 w-full h-full" />
+            )
+
+        }
+
+
       </Card>
     </section>
   );
