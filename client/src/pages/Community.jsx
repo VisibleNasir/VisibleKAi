@@ -1,15 +1,52 @@
 import { useEffect, useState } from "react";
-import { useUser } from "@clerk/clerk-react";
-import { dummyPublishedCreationData } from "../assets/assets";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import axios from "axios";
+import toast from "react-hot-toast";
+
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const Community = () => {
   const [creations, setCreations] = useState([]);
   const { user } = useUser();
+  const [loading, setLoading] = useState(true);
+  const { getToken } = useAuth();
 
   const fetchCreations = async () => {
-    setCreations(dummyPublishedCreationData);
+    try {
+      const { data } = await axios.get("/api/user/get-published-creations", {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+
+      if (data.success) {
+        setCreations(data.creations);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setLoading(false);
+  };
+
+  const imageLikeToggle = async (id) => {
+    try {
+      const { data } = await axios.post(
+        "/api/user/toggle-like-creation",
+        { id },
+        { headers: { Authorization: `Bearer ${await getToken()}` } }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        await fetchCreations();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
@@ -18,25 +55,35 @@ const Community = () => {
     }
   }, [user]);
 
-  return (
-    <section className="p-4 sm:p-6 lg:p-8 xl:p-10 bg-zinc-950 text-zinc-100">
-      <h2 className="text-lg font-semibold text-zinc-100 mb-4">Community Creations</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {creations.slice(0, 3).map((creation, index) => (
-          <Card key={index} className="relative bg-zinc-900 border-zinc-800 group overflow-hidden">
+  return !loading ? (
+    <section className="min-h-screen w-full p-6 sm:p-8 lg:p-10 bg-zinc-950 text-zinc-100">
+      <h2 className="text-xl font-semibold mb-6 text-center">
+        Community Creations
+      </h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {creations.slice(0, 6).map((creation, index) => (
+          <Card
+            key={index}
+            className="relative bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-lg group"
+          >
             <CardContent className="p-0">
               <img
                 src={creation.content}
                 alt={creation.prompt}
-                className="w-full h-48 object-cover rounded-lg"
+                className="w-full h-56 sm:h-64 object-cover transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 flex items-end justify-between p-3 bg-gradient-to-b from-transparent to-zinc-900/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-xs text-zinc-100">{creation.prompt}</p>
+              <div className="absolute inset-0 flex items-end justify-between p-3 bg-gradient-to-b from-transparent to-zinc-900/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-xs font-medium  truncate text-zinc-100">
+                  {creation.prompt}
+                </p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs text-zinc-100">{creation.likes.length}</span>
                   <Heart
-                    className={`w-4 h-4 cursor-pointer transition-transform hover:scale-110 ${
-                      creation.likes.includes(user?.id) ? "fill-red-500 text-red-500" : "text-zinc-100"
+                    onClick={() => imageLikeToggle(creation.id)}
+                    className={`w-5 h-5 cursor-pointer transition-transform hover:scale-110 ${
+                      creation.likes.includes(user?.id)
+                        ? "fill-red-500 text-red-500"
+                        : "text-zinc-200"
                     }`}
                   />
                 </div>
@@ -46,6 +93,10 @@ const Community = () => {
         ))}
       </div>
     </section>
+  ) : (
+    <div className="flex justify-center items-center min-h-screen bg-zinc-950">
+      <span className="w-10 h-10 my-1 rounded-full border-4 border-zinc-700 border-t-transparent animate-spin"></span>
+    </div>
   );
 };
 

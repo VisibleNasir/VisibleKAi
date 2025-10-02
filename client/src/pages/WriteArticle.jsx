@@ -130,7 +130,7 @@ const WriteArticle =  () => {
           </form>
         </CardContent>
       </Card>
-      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg max-h-[600px] p-2 ">
+      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg max-h-[600px] ">
         <CardHeader className="py-2">
           <div className="flex items-center gap-2">
             <Edit2 className="w-4 h-4 text-zinc-400" />
