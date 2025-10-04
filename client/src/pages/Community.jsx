@@ -56,12 +56,12 @@ const Community = () => {
   }, [user]);
 
   return !loading ? (
-    <section className="min-h-screen w-full p-6 sm:p-8 lg:p-10 bg-zinc-950 text-zinc-100">
+    <section className="min-h-screen w-full p-6 sm:p-8 lg:p-10 bg-zinc-950 text-zinc-100 overflow-y-auto">
       <h2 className="text-xl font-semibold mb-6 text-center">
         Community Creations
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {creations.slice(0, 6).map((creation, index) => (
+        {creations.map((creation, index) => (
           <Card
             key={index}
             className="relative bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-lg group"
