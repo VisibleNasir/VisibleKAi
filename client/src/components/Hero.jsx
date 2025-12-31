@@ -1,74 +1,64 @@
-
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-const Hero = () => {
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+const Hero = ({ theme }) => {
   const navigate = useNavigate();
 
-  // Background animation
   const bgVariants = {
-    hidden: { opacity: 0, background: "linear-gradient(to bottom, rgba(24, 24, 27, 0.5), rgba(24, 24, 27, 0.8))" },
-    visible: {
-      opacity: 1,
-      background: "linear-gradient(to bottom, rgba(39, 39, 42, 0.4), rgba(39, 39, 42, 0.7))",
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.6, ease: "easeOut" } },
   };
 
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-screen  text-zinc-100 px-4 sm:px-6 lg:px-8">
+    <section className={`relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden ${
+      theme === "dark" ? "bg-zinc-950 text-zinc-100" : "bg-white text-zinc-900"
+    }`}>
       <motion.div
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.7 }}
+        initial="hidden"
+        animate="visible"
         variants={bgVariants}
+        className={`absolute inset-0 ${
+          theme === "dark" ? "bg-gradient-to-b from-zinc-900/60 via-zinc-950 to-zinc-950" : "bg-gradient-to-b from-gray-100/60 via-gray-200 to-gray-50"
+        }`}
       />
-      
-      <div className="relative z-10 text-center max-w-4xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl  md:text-5xl font-bold  leading-tight tracking-tight mb-6">
-          Coffee in One Hand , <span className="text-yellow-300">Creations</span> in the Other
+      <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold tracking-tight leading-tight">
+          Build Content Faster.<br />
+          <span className={theme === "dark" ? "text-zinc-400" : "text-zinc-600"}>
+            Create Smarter with VisiblekAI
+          </span>
         </h1>
-        <p className="text-zinc-200 text-lg sm:text-xl max-w-4xl mx-auto mb-7">
-          Blog titles, long-form articles, image generation, background removal — all in one sleek platform. VisiblekAi makes creativity as easy as sipping your latte.
-        </p>  
-        <div className="flex flex-wrap justify-center gap-4">
+        <p className={`${theme === "dark" ? "text-zinc-400" : "text-zinc-600"} text-base sm:text-lg max-w-3xl mx-auto`}>
+          Generate blog titles, long-form articles, AI images, and remove backgrounds — all from one powerful platform designed for creators.
+        </p>
+        <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Button
             onClick={() => navigate("/ai")}
-            className="bg-zinc-600 text-zinc-1-0 px-8 py-6 text-base font-semibold rounded-lg hover:bg-zinc-500 active:bg-zinc-700 transition-transform transform hover:scale-101 cursor-pointer active:scale-95"
+            className={`px-8 py-6 text-base font-medium rounded-xl transition-all ${
+              theme === "dark" ? "bg-zinc-100 text-zinc-900 hover:bg-zinc-200" : "bg-zinc-900 text-white hover:bg-zinc-800"
+            }`}
           >
-            Start Creating Now
+            Get Started
           </Button>
           <Button
             variant="outline"
             onClick={() => window.open("https://www.youtube.com/@VisibleNasir", "_blank")}
-            className="border-zinc-700 bg-zinc-800 text-zinc-100 px-8 py-6 text-base font-semibold rounded-lg hover:bg-zinc-700 hover:text-zinc-50 active:bg-zinc-600 transition-transform transform hover:scale-101 active:scale-95"
+            className={`px-8 py-6 text-base font-medium rounded-xl border transition-all ${
+              theme === "dark" ? "border-zinc-700 bg-zinc-900 hover:bg-zinc-800" : "border-zinc-400 bg-white hover:bg-gray-100"
+            }`}
           >
             Watch Demo
           </Button>
         </div>
-        <div className="flex items-center justify-center gap-3 mt-10 text-zinc-400">
-          <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <Avatar>
-              <AvatarImage src="https://github.com/leerob.png" alt="@leerob" />
-              <AvatarFallback>LR</AvatarFallback>
-            </Avatar>
-            <Avatar>
-              <AvatarImage
-                src="https://github.com/evilrabbit.png"
-                alt="@evilrabbit"
-              />
-              <AvatarFallback>ER</AvatarFallback>
-            </Avatar>
-          </div>
-          <span className="text-sm font-medium">Trusted by over 2 creators</span>
+        <div className="flex items-center justify-center gap-4 pt-8">
+          <Avatar className="border border-zinc-800"><AvatarImage src="https://github.com/shadcn.png"/><AvatarFallback>NN</AvatarFallback></Avatar>
+          <span className={theme === "dark" ? "text-zinc-500" : "text-zinc-600"}>Trusted by creators building every day</span>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
 export default Hero;

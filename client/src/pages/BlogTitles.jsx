@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import Markdown from "react-markdown";
 import { useAuth } from "@clerk/clerk-react";
 import axios from "axios";
+import { useTheme } from "@/context/ThemeContext";
+
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const BlogTitles = () => {
@@ -22,11 +24,15 @@ const BlogTitles = () => {
     "Travel",
     "Food",
   ];
+
   const [selectedCategory, setSelectedCategory] = useState("General");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
+
   const { getToken } = useAuth();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -38,126 +44,146 @@ const BlogTitles = () => {
       const { data } = await axios.post(
         "api/ai/generate-blog-title",
         { prompt },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      if (data.success) {
-        setContent(data.content);
-      } else {
-        toast.error(data.message);
-      }
+
+      data.success ? setContent(data.content) : toast.error(data.message);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || error.message);
-      } else {
-        toast.error("Something went wrong");
-      }
+      toast.error("Something went wrong");
     }
     setLoading(false);
   };
 
   return (
-    <section className="sm:p-6 md:p-8 lg:p-10 bg-zinc-950 flex justify-evenly w-screen h-screen text-zinc-100">
-      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800 shadow-lg ">
-        <CardHeader className="py-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-zinc-400" />
-            <CardTitle className="text-base font-semibold text-zinc-100">
-              AI Title Generation
-            </CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="py-2 space-y-4">
-          <form onSubmit={onSubmitHandler} className="space-y-4">
-            <div>
-              <Label
-                htmlFor="keyword"
-                className="text-xl font-medium text-zinc-300"
-              >
-                Keyword
-              </Label>
-              <Input
-                id="keyword"
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Describe your blog title here..."
-                className="mt-3 text-center bg-zinc-800 border-zinc-700 p-5 text-zinc-100 rounded-lg text-xl outline-none"
-                required
-              />
+    <section
+      className={`min-h-[calc(100vh-64px)] px-4 sm:px-6 lg:px-10 py-8 transition-colors
+      ${isDark ? "bg-zinc-950 text-zinc-100" : "bg-gray-50 text-zinc-900"}`}
+    >
+      <div className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {/* LEFT */}
+        <Card
+          className={`rounded-2xl shadow-xl backdrop-blur border
+          ${isDark ? "bg-zinc-900/80 border-zinc-800" : "bg-white border-gray-200"}`}
+        >
+          <CardHeader className={`pb-4 border-b ${isDark ? "border-zinc-800" : "border-gray-200"}`}>
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-zinc-400" />
+              <CardTitle className="text-lg font-semibold">
+                AI Blog Title Generator
+              </CardTitle>
             </div>
-            <div>
-              <Label className="text-xl font-medium text-zinc-300">
-                Category
-              </Label>
-              <RadioGroup
-                value={selectedCategory}
-                onValueChange={setSelectedCategory}
-                className="mt-1 flex flex-wrap gap-2"
-              >
-                {blogCategories.map((item) => (
-                  <div key={item} className="flex items-center space-x-1.5">
-                    <RadioGroupItem
-                      value={item}
-                      id={item}
-                      className="text-zinc-300 border-zinc-600 focus:ring-zinc-500 w-3.5 h-3.5"
-                    />
-                    <Label
+            <p className="text-sm text-zinc-500 mt-1">
+              Generate catchy blog titles based on keywords and category
+            </p>
+          </CardHeader>
+
+          <CardContent className="pt-6 space-y-6">
+            <form onSubmit={onSubmitHandler} className="space-y-6">
+
+              {/* Keyword */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-zinc-500">
+                  Keyword
+                </Label>
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="e.g. Artificial Intelligence trends"
+                  className={`rounded-xl p-4 text-sm
+                    ${isDark
+                      ? "bg-zinc-800 border-zinc-700 focus:ring-zinc-600"
+                      : "bg-gray-100 border-gray-300 focus:ring-gray-400"
+                    }`}
+                  required
+                />
+              </div>
+
+              {/* Category */}
+              <div className="space-y-3">
+                <Label className="text-sm font-medium text-zinc-500">
+                  Category
+                </Label>
+                <RadioGroup
+                  value={selectedCategory}
+                  onValueChange={setSelectedCategory}
+                  className="grid grid-cols-2 sm:grid-cols-3 gap-2"
+                >
+                  {blogCategories.map((item) => (
+                    <label
+                      key={item}
                       htmlFor={item}
-                      className={`text-sm cursor-pointer ${
-                        selectedCategory === item
-                          ? "text-zinc-100 font-medium"
-                          : "text-zinc-400"
-                      }`}
+                      className={`flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer transition
+                        ${
+                          selectedCategory === item
+                            ? isDark
+                              ? "bg-zinc-800 border-zinc-600"
+                              : "bg-gray-200 border-gray-400"
+                            : isDark
+                              ? "border-zinc-700 text-zinc-400 hover:bg-zinc-800/50"
+                              : "border-gray-300 text-gray-600 hover:bg-gray-100"
+                        }`}
                     >
-                      {item}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
-            </div>
-            <Button
-              disabled={loading}
-              type="submit"
-              className="w-full flex items-center gap-1.5 bg-zinc-700 text-zinc-100 font-semibold rounded-lg hover:bg-zinc-600 active:bg-zinc-700 transition-transform transform cursor-pointer text-sm"
-            >
-              {loading ? (
-                <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>
-              ) : (
-                <Hash className="w-4 h-4" />
-              )}
-              Generate Title
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-      <Card className="w-full max-w-lg bg-zinc-900 border-zinc-800  shadow-lg max-h-[600px]">
-        <CardHeader className="py-2">
-          <div className="flex items-center gap-2">
-            <Hash className="w-4 h-4 text-zinc-400" />
-            <CardTitle className="text-base font-semibold text-zinc-100">
-              Generated Titles
-            </CardTitle>
-          </div>
-        </CardHeader>
-        {!content ? (
-          <CardContent className="flex items-center justify-center py-2">
-            <div className="text-center text-xs text-zinc-100 flex flex-col items-center gap-3">
-              <Hash className="w-8 h-8" />
-              <p>Enter a keyword and click "Generate Title" to get started</p>
-            </div>
+                      <RadioGroupItem value={item} id={item} />
+                      <span className="text-xs font-medium">{item}</span>
+                    </label>
+                  ))}
+                </RadioGroup>
+              </div>
+
+              {/* Submit */}
+              <Button
+                disabled={loading}
+                type="submit"
+                className={`w-full h-11 rounded-xl font-semibold transition flex items-center justify-center gap-2
+                ${isDark
+                  ? "bg-zinc-100 text-zinc-900 hover:bg-white"
+                  : "bg-zinc-900 text-white hover:bg-zinc-800"
+                }`}
+              >
+                {loading ? (
+                  <span className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Hash className="w-4 h-4" />
+                )}
+                Generate Title
+              </Button>
+
+            </form>
           </CardContent>
-        ) : (
-          <div className="mt-1  h-full overflow-y-scroll text-zinc-100">
-            <div className=".reset-tw">
-              <Markdown>{content}</Markdown>
+        </Card>
+
+        {/* RIGHT */}
+        <Card
+          className={`rounded-2xl shadow-xl backdrop-blur border flex flex-col max-h-[600px]
+          ${isDark ? "bg-zinc-900/80 border-zinc-800" : "bg-white border-gray-200"}`}
+        >
+          <CardHeader className={`pb-4 border-b ${isDark ? "border-zinc-800" : "border-gray-200"}`}>
+            <div className="flex items-center gap-2">
+              <Hash className="w-5 h-5 text-zinc-400" />
+              <CardTitle className="text-lg font-semibold">
+                Generated Titles
+              </CardTitle>
             </div>
-          </div>
-        )}
-      </Card>
+          </CardHeader>
+
+          {!content ? (
+            <CardContent className="flex flex-1 items-center justify-center">
+              <div className="text-center text-sm text-zinc-400 space-y-3">
+                <Hash className="w-10 h-10 mx-auto opacity-60" />
+                <p>No titles generated yet</p>
+              </div>
+            </CardContent>
+          ) : (
+            <div className="p-4 overflow-y-auto text-sm">
+              <div className={`prose max-w-none ${isDark ? "prose-invert" : ""}`}>
+                <Markdown>{content}</Markdown>
+              </div>
+            </div>
+          )}
+        </Card>
+
+      </div>
     </section>
   );
 };
