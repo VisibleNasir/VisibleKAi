@@ -9,8 +9,6 @@ import RemoveBackground from "./pages/RemoveBackground"
 import ReviewResume from "./pages/ReviewResume"
 import Community from "./pages/Community"
 import REmoveObject from "./pages/RemoveObject"
-import { useEffect } from "react"
-import { useAuth } from "@clerk/clerk-react"
 import { ThemeProvider } from "./context/ThemeContext"
 
 import {Toaster} from 'react-hot-toast'
@@ -21,7 +19,7 @@ const App = () => {
 
   return (
     <ThemeProvider>
-      <div>
+      <div >
         <Toaster />
         <Routes>
           <Route path="/" element={<Home/>} />

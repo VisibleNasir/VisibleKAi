@@ -23,7 +23,7 @@ const Home = () => {
   }, [theme]);
 
   return (
-    <div className={`relative flex flex-col ${theme === "dark" ? "bg-zinc-950 text-zinc-100" : "bg-white text-zinc-900"}`}>
+    <div className={`relative selection:bg-zinc-400 flex flex-col ${theme === "dark" ? "bg-zinc-950 text-zinc-100" : "bg-white text-zinc-900"}`}>
       <Navbar theme={theme} setTheme={setTheme}/>
       <Hero theme={theme}/>
       <AiTools theme={theme}/>

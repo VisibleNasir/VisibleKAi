@@ -1,4 +1,4 @@
-//middleware to check userId and hasPremiumPlan
+
 
 import { clerkClient } from "@clerk/express";
 

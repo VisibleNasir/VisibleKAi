@@ -18,7 +18,7 @@ const Layout = () => {
   }
 
   return user ? (
-    <div className={`min-h-screen ${theme === "dark" ? "bg-zinc-950 text-zinc-100" : "bg-gray-50 text-zinc-900"}`}>
+    <div className={`min-h-screen selection:bg-zinc-400 ${theme === "dark" ? "bg-zinc-950 text-zinc-100" : "bg-gray-50 text-zinc-900"}`}>
       <Navbar />
 
       {/* offset for fixed navbar */}
