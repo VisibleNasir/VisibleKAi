@@ -29,7 +29,7 @@ const navItems = [
   { to: "/ai/community", label: "Community", Icon: Users },
 ];
 
-const Navbar = ({ theme: propTheme, setTheme: propSetTheme }) => {
+const Navbar = ({ theme: propTheme, setTheme: propSetTheme, setSidebar }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useUser();
@@ -107,7 +107,13 @@ const Navbar = ({ theme: propTheme, setTheme: propSetTheme }) => {
         <div className="flex items-center gap-2">
           {/* Mobile menu toggle */}
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={() => {
+              if (setSidebar) {
+                setSidebar(prev => !prev);
+              } else {
+                setMobileOpen(prev => !prev);
+              }
+            }}
             className={`lg:hidden p-2 rounded-md transition ${
               theme === "dark"
                 ? "text-zinc-300 hover:bg-zinc-800"
@@ -169,8 +175,8 @@ const Navbar = ({ theme: propTheme, setTheme: propSetTheme }) => {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
-      {mobileOpen && (
+      {/* MOBILE MENU - only shown when no sidebar is managed externally */}
+      {mobileOpen && !setSidebar && (
         <div
           className={`lg:hidden border-t ${
             theme === "dark"

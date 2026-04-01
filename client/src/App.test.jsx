@@ -29,6 +29,7 @@ jest.mock("./pages/RemoveBackground", () => () => <div>Remove Background Page</d
 jest.mock("./pages/RemoveObject", () => () => <div>Remove Object Page</div>);
 jest.mock("./pages/ReviewResume", () => () => <div>Review Resume Page</div>);
 jest.mock("./pages/Community", () => () => <div>Community Page</div>);
+jest.mock("./pages/ManagePlan", () => () => <div>Manage Plan Page</div>);
 
 // ---- MOCK CLERK ----
 jest.mock("@clerk/clerk-react", () => ({
@@ -94,5 +95,15 @@ describe("App Routing", () => {
     );
 
     expect(screen.getByText("Community Page")).toBeInTheDocument();
+  });
+
+  test("renders Manage Plan page", () => {
+    render(
+      <MemoryRouter initialEntries={["/ai/manage-plan"]}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Manage Plan Page")).toBeInTheDocument();
   });
 });
