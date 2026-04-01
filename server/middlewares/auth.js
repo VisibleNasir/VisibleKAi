@@ -9,16 +9,10 @@ export const auth = async (req, res, next) => {
 
         const user = await clerkClient.users.getUser(userId);
 
-        if (!hasPremiumPlan && user.privateMetadata.free_usage) {
-            req.free_usage = user.privateMetadata.free_usage
+        if (!hasPremiumPlan) {
+            req.free_usage = user.privateMetadata.free_usage ?? 0;
         } else {
-            await clerkClient.users.updateUserMetadata(userId, {
-                privateMetadata: {
-                    free_usage: 0
-                }
-            })
             req.free_usage = 0;
-
         }
 
         req.plan = hasPremiumPlan ? 'premium' : 'free';
@@ -26,6 +20,4 @@ export const auth = async (req, res, next) => {
     } catch (error) {
         res.json({ success: false, message: error.message })
     }
-
-
 }

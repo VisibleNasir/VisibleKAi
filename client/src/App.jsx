@@ -9,6 +9,7 @@ import RemoveBackground from "./pages/RemoveBackground"
 import ReviewResume from "./pages/ReviewResume"
 import Community from "./pages/Community"
 import REmoveObject from "./pages/RemoveObject"
+import ManagePlan from "./pages/ManagePlan"
 import { ThemeProvider } from "./context/ThemeContext"
 
 import {Toaster} from 'react-hot-toast'
@@ -32,6 +33,7 @@ const App = () => {
             <Route path='remove-object' element={<REmoveObject/>} />
             <Route path='review-resume' element={<ReviewResume/>} />
             <Route path='community' element={<Community/>} />
+            <Route path='manage-plan' element={<ManagePlan/>} />
           </Route>
         
         </Routes>
