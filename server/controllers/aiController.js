@@ -4,10 +4,19 @@ import { clerkClient } from "@clerk/express";
 import axios from "axios";
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
+import os from "os";
+import path from "path";
 import pdf from "pdf-parse/lib/pdf-parse.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const deleteTempFile = (filePath) => {
+    const resolvedPath = path.resolve(filePath);
+    if (resolvedPath.startsWith(path.resolve(os.tmpdir()))) {
+        fs.promises.unlink(resolvedPath).catch((err) => console.error("Failed to delete temp file:", err));
+    }
+};
 
 export const generateArticle = async (req, res) => {
   try {
@@ -158,6 +167,8 @@ export const removeImageBackground = async (req, res) => {
             ]
         })
 
+        deleteTempFile(image.path);
+
         await sql`INSERT INTO CREATIONS (user_id, prompt, content, type) VALUES (${userId}, 'Remove background from image' , ${secure_url}, 'image')`;
 
         res.json({ success: true, content: secure_url })    
@@ -183,9 +194,12 @@ export const removeImageObject = async (req, res) => {
 
         const {public_id} = await cloudinary.uploader.upload(image.path)
 
+        deleteTempFile(image.path);
+
         const imageUrl = cloudinary.url(public_id, {
             transformation:[{effect: `gen_remove:${object}`}],
-            resource_type: 'image'
+            resource_type: 'image',
+            secure: true
         })
 
         await sql`INSERT INTO CREATIONS (user_id, prompt, content, type) VALUES (${userId}, ${`Removed ${object} from image`} , ${imageUrl}, 'image')`;
